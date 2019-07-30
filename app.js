@@ -75,13 +75,25 @@ app.use(
            title: args.sessionInput.title,
            description: args.sessionInput.description,
            price: +args.sessionInput.price,
-           date: new Date(args.sessionInput.date)
+           date: new Date(args.sessionInput.date),
+           creator: '5d3fc22b352c06b43c883645'
         });
+        let createdSession;
         return session
           .save()
           .then(result=>{
-            console.log(result);
-            return {...result._doc};
+            createdSession={...result._doc}
+            return User.findById('5d3fc22b352c06b43c883645')
+        })
+        .then(user=> {
+            if(!user){
+                throw new Error('User not found.')
+            }
+            user.createdSessions.push(session);
+            return user.save();
+        })
+        .then(result=>{
+            return createdSession;
         })
           .catch(err=>{
             console.log(err);
@@ -89,8 +101,11 @@ app.use(
         });      
       },
       createUser:args=> {
-           return bcrypt
+           return User.findOne({email:args.userInput.email}).then(user=>{
+            
+            return bcrypt
             .hash(args.userInput.password,12)
+            })
             .then(hashedPassword=>{
                const user = new User({
                 email:args.userInput.email,
@@ -99,7 +114,7 @@ app.use(
               return user.save();
             })
             .then(result=> {
-                return{...result._doc};
+                return{...result._doc,password:null};
             })
             .catch(err=>{
                 throw err;
