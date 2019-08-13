@@ -5,12 +5,13 @@ const mongoose=require('mongoose');
 
 const APISchema=require('./API/schema/index');
 const APIResolvers=require('./API/resolvers/index');
+const checkTrue= require('./bridge/check');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-
+app.use(checkTrue);
 
 app.use(
   '/graphql',
