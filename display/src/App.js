@@ -8,6 +8,7 @@ import MainNav from'./components/NavBar/Main';
 import SideBar from './components/SideBar/SideBar';
 import Fade from './components/SideBar/Fade';
 
+
 class App extends Component{
 
     state={
@@ -20,20 +21,24 @@ class App extends Component{
         });
     };
 
-    backClick=()=>{
+    closeClick=()=>{
         this.setState({sideOpen:false});
     };
 
     render() {
+      let sidebar;
+      if(this.state.sideOpen){
+        sidebar=<SideBar nextClick={this.closeClick}/>
+      }
       let fade;
       if(this.state.sideOpen){
-        fade=<Fade click={this.backClick}/>;
+        fade=<Fade click={this.closeClick}/>
       }
       return (
         <BrowserRouter>
         <div style={{height:'100%'}}>
             <MainNav clickHandler={this.clickHandle}/>
-            <SideBar display={this.state.sideOpen} />
+            {sidebar}
             {fade}
             
             <React.Fragment>
