@@ -1,0 +1,22 @@
+.button {
+	cursor:pointer;
+	height:24px;
+	width: 30px;
+	border:none;
+	background:transparent;
+	display:flex;
+	flex-direction:column;
+	padding:0;
+	box-sizing:border-box;
+	justify-content:space-between;
+}
+
+.button:focus{
+	outline:none;
+}
+
+.button-line{
+	height:2px;
+	width:30px;
+	background:white;
+}

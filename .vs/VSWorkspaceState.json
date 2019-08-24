@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\API",
+    "\\API\\resolvers",
+    "\\API\\schema",
+    "\\display",
+    "\\display\\src",
+    "\\display\\src\\components",
+    "\\display\\src\\components\\NavBar",
+    "\\display\\src\\components\\SideBar",
+    "\\display\\src\\pages"
+  ],
+  "SelectedNode": "\\display\\src\\components",
+  "PreviewInSolutionExplorer": false
+}

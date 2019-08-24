@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-components",
+      "appliesTo": "display/src/components/",
+      "type": "launch"
+    }
+  ]
+}
