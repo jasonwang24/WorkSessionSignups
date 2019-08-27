@@ -9,6 +9,7 @@
 	display:flex;
 	align-items:center;
 	color:#FFDF00;
+	font-family:"Helvetica";
 
 }
 
@@ -33,7 +34,7 @@
 }
 
 .nav-item .login-format{
-	top:30%;
+	top:33%;
 	right:5%;
 	position:absolute;
 }
