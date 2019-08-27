@@ -2,22 +2,101 @@ import React,{ Component } from 'react';
 import './login.css';
 
 class Login extends Component {
+
+    state={
+        logging:true
+    }
+
+    swap=()=>{
+        this.setState(prevState=>{
+            return{logging:!prevState.logging};
+        })
+    }
+
+    constructor(props){
+        super(props);
+        this.email=React.createRef();
+        this.password=React.createRef();
+    };
+
+   //regex to validate characters in address
+   validateEmail(address) {
+           var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+           return re.test(address);
+   };
+
+    readFields=(event)=>{
+        event.preventDefault();
+        const address=this.email.current.value;
+        const pass=this.password.current.value;
+        
+        if(!this.validateEmail(address)||address.trim().length===0 || pass.trim().length===0){
+            return;
+        }
+
+        let request={
+            query: `
+                query {
+                    login(email:"${address}",password:"${pass}") {
+                        userCheck
+                        token
+                        tokenExpire
+                    }   
+                }
+            `
+        };
+
+        if(!this.state.logging){
+            const request = {
+                query: `
+                  mutation {
+                    createUser(userInput: {email: "${address}", password: "${pass}"}) {
+                      _id
+                      email
+                    }
+                  }
+                `
+              };
+        }
+
+        
+        fetch('http://localhost:8000/graphql',{
+            method:'POST',
+            body:JSON.stringify(request),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        .then(res=>{
+            if(res.status!==200&&res.status!=201){
+                throw new Error('Error');
+            }
+            return res.json();
+        })
+        .then(resData=>{
+            console.log(resData);
+        })
+        .catch(err=>{
+            console.log(err);
+        });;
+    };
+
     render() {
-        return (<form className="all-forms">
+        return (<form className="all-forms" onSubmit={this.readFields}>
             
             <div className="form">
                 <label htmlFor="email">Email: </label>
-                <input type="email" id="email" />
+                <input type="email" id="email" ref={this.email} />
             </div>
 
             <div className="form">
                 <label htmlFor="password">Password: </label>
-                <input type="password" id="password" />
+                <input type="password" id="password" ref={this.password}/>
             </div>
 
             <div className="formMod">
                 <button type="submit">Submit</button>
-                <button type="button">Signup</button>
+                <button type="button" onClick={this.swap}>{this.state.logging ? 'Join':'Login'}</button>
             </div>
         </form>
     );
