@@ -8,3 +8,43 @@ body {
   height:100%;
 }
 
+.all-forms{
+	width: 40rem;
+	max-width: 50%;
+	margin:5rem auto;
+	padding-top:60px;
+}
+
+.form label{
+	margin-bottom:1rem;
+}
+
+.form{
+	margin-bottom:1rem;
+}
+
+.form label,
+.form input{
+	width:100%;
+	display:block;
+}
+
+.formMod button,
+.buttonformat{
+	background:#FFFF99;
+	border-color:black;
+	border-width:thin;
+	font:inherit;
+	border-radius: 10px;
+	margin: 0 0.1rem;
+	box-shadow:1px 1px 5px rgba(0,0,0,0.3);
+	cursor:pointer;
+}
+
+.formMod button:hover,
+.form-actions button:active,
+.buttonformat:hover,
+.buttonformat:active{
+	background:#FFDF00;
+}
+

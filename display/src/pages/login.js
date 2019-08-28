@@ -1,17 +1,18 @@
 import React,{ Component } from 'react';
 import './login.css';
+import LoginCont from'../context/login-cont';
 
 class Login extends Component {
 
     state={
         logging:true
-    }
+    };
 
     swap=()=>{
         this.setState(prevState=>{
             return{logging:!prevState.logging};
-        })
-    }
+        });
+    };
 
     constructor(props){
         super(props);
@@ -19,11 +20,13 @@ class Login extends Component {
         this.password=React.createRef();
     };
 
-   //regex to validate characters in address
-   validateEmail(address) {
+    static contextType=LoginCont;
+
+    //regex to validate characters in address
+    validateEmail(address) {
            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
            return re.test(address);
-   };
+    };
 
     readFields=(event)=>{
         event.preventDefault();
@@ -68,13 +71,15 @@ class Login extends Component {
             }
         })
         .then(res=>{
-            if(res.status!==200&&res.status!=201){
+            if(res.status!==200&&res.status!==201){
                 throw new Error('Error');
             }
             return res.json();
         })
         .then(resData=>{
-            console.log(resData);
+            if(resData.data.login.token){
+                this.context.login(resData.data.login.token,resData.data.login.checkUser,resData.data.login.tokenExpire);
+            }
         })
         .catch(err=>{
             console.log(err);
@@ -82,21 +87,23 @@ class Login extends Component {
     };
 
     render() {
-        return (<form className="all-forms" onSubmit={this.readFields}>
-            
-            <div className="form">
-                <label htmlFor="email">Email: </label>
-                <input type="email" id="email" ref={this.email} />
-            </div>
+        return (<form onSubmit={this.readFields}>
+            <h1 className="title">Login Page</h1>
+            <div className="all-forms">
+                <div className="form">
+                    <label htmlFor="email">Email: </label>
+                    <input type="email" id="email" ref={this.email} />
+                </div>
 
-            <div className="form">
-                <label htmlFor="password">Password: </label>
-                <input type="password" id="password" ref={this.password}/>
-            </div>
+                <div className="form">
+                    <label htmlFor="password">Password: </label>
+                    <input type="password" id="password" ref={this.password}/>
+                </div>
 
-            <div className="formMod">
-                <button type="submit">Submit</button>
-                <button type="button" onClick={this.swap}>{this.state.logging ? 'Join':'Login'}</button>
+                <div className="formMod">
+                    <button type="submit">Submit</button>
+                    <button type="button" onClick={this.swap}>{this.state.logging ? 'Join':'Login'}</button>
+                </div>
             </div>
         </form>
     );

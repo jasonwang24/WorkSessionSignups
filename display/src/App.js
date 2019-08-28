@@ -7,12 +7,14 @@ import Signups from './pages/signups';
 import MainNav from'./components/NavBar/Main';
 import SideBar from './components/SideBar/SideBar';
 import Fade from './components/SideBar/Fade';
-
+import LoginCont from './context/login-cont';
 
 class App extends Component{
 
     state={
-        sideOpen:false
+        sideOpen:false,
+        token:null,
+        checkUser:null
     };
 
     clickHandle=()=>{
@@ -25,6 +27,14 @@ class App extends Component{
         this.setState({sideOpen:false});
     };
 
+    login=(token,checkUser,tokenExpire)=>{
+        this.setState({token:token,checkUser:checkUser});
+    };
+    logout=()=>{
+        this.setState({token:null,checkUser:null});
+    };
+
+
     render() {
       let sidebar;
       if(this.state.sideOpen){
@@ -36,22 +46,25 @@ class App extends Component{
       }
       return (
         <BrowserRouter>
-        <div style={{height:'100%'}}>
-            <MainNav clickHandler={this.clickHandle}/>
-            {sidebar}
-            {fade}
-            
-            <React.Fragment>
-                <main className="content">
-                    <Switch>
-                     <Redirect from ="/" to="/login" exact/>
-                     <Route path="/login" component={Login} />
-                     <Route path="/sessions" component={Sessions} />
-                     <Route path="/signups" component={Signups} />
-                    </Switch>
-                </main>
-            </React.Fragment>
+        <React.Fragment>
+        <LoginCont.Provider value={{token:this.state.token,checkUser:this.state.checkUser,login:this.login,logout:this.logout}}>    
+        <div style={{height:'100%'}}>  
+                <MainNav clickHandler={this.clickHandle}/>
+                {sidebar}
+                {fade}
+                    <main className="content">
+                        <Switch>
+                         {this.state.token&&<Redirect from ="/" to="/sessions" exact/>}
+                         {this.state.token&&<Redirect from ="/login" to="/sessions" exact/>}
+                         {!this.state.token&&(<Route path="/login" component={Login} />)}
+                         <Route path="/sessions" component={Sessions} />
+                         {this.state.token&&(<Route path="/signups" component={Signups} />)}
+                         {!this.state.token&&<Redirect to="/login" exact/>}
+                        </Switch>
+                    </main>
         </div>
+        </LoginCont.Provider>
+        </React.Fragment>
         </BrowserRouter>
       );
     }

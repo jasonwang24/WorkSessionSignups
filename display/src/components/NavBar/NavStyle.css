@@ -10,7 +10,6 @@
 	align-items:center;
 	color:#FFDF00;
 	font-family:"Helvetica";
-
 }
 
 .nav-title {
@@ -39,14 +38,21 @@
 	position:absolute;
 }
 
-.main-nav a{
+.main-nav a,
+.main-nav button{
 	text-decoration:none;
 	color:#FFFFFF;
+	background:transparent;
+	border:none;
+	font:inherit;
+	cursor:pointer;
 }
 
 .nav-item a:hover,
 .nav-item a:active,
-.nav-item a.active{
+.nav-item a.active,
+.nav-item button:hover,
+.nav-item button:active{
 	color:#FFDF00;
 	text-decoration:underline;
 }
