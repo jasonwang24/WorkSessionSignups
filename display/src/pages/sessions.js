@@ -9,7 +9,8 @@ class Sessions extends Component {
     state={
         new:false,
         sessions:[],
-        load:false
+        load:false,
+        sessionSelect:null
     };
 
     startNew=()=>{
@@ -17,7 +18,7 @@ class Sessions extends Component {
     };
 
     checkCancel=()=>{
-        this.setState({new:false});
+        this.setState({new:false,sessionSelect:null});  
     };
 
     static contextType = LoginCont;
@@ -140,11 +141,59 @@ class Sessions extends Component {
         });
     }
 
+    sessionSignup = ()=>{
+        if(!this.context.token){
+            this.setState({sessionSelect:null})
+            return;
+        }
+        const request = {
+        query: `
+          mutation { 
+            signupSession(sessionId:"${this.state.sessionSelect._id}"){   
+                _id
+                createdAt
+                updatedAt
+            }
+          }
+        `
+       };
+        
+        fetch('http://localhost:8000/graphql',{
+            method:'POST',
+            body:JSON.stringify(request),
+            headers:{
+                'Content-Type':'application/json',  
+                'Authorization': 'Bearer '+this.context.token
+            }
+        })
+        .then(res=>{
+            if(res.status!== 200 && res.status !== 201){
+                throw new Error('Error!!!');
+            }
+            return res.json();
+        })
+        .then(resData=>{
+           console.log(resData);
+           this.setState({sessionSelect:null})
+        })
+        .catch(err=>{
+            console.log(err);
+            this.setState({load:false});
+        });
+    }
+
+    detailWindow=sessionId=>{
+        this.setState(prevState=>{
+            const sessionSelect=prevState.sessions.find(s=>s._id===sessionId)
+            return{sessionSelect:sessionSelect};
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
-            {this.state.new && <Fade/>}
-            {this.state.new && <Window title="Adding a Session..." cancel confirm cancelling={this.checkCancel} confirming={this.checkConfirm}>
+            {(this.state.new || this.state.sessionSelect) && <Fade/>} 
+            {this.state.new && <Window title="Adding a Session..." cancel confirm cancelling={this.checkCancel} confirming={this.checkConfirm} confirmButton="Confirm">
                 <form>
                    <div className="form">
                         <label htmlFor="title">Title</label>
@@ -164,35 +213,42 @@ class Sessions extends Component {
                    </div>
                 </form>
             </Window>}
+            {this.state.sessionSelect  && (<Window title={this.state.sessionSelect.title} cancel confirm cancelling={this.checkCancel} confirming={this.sessionSignup} confirmButton="Signup">
+                <h1>{this.state.sessionSelect.title}</h1>
+                <h2>test</h2>
+                <p>{this.state.sessionSelect.description}</p>
+                
+            </Window>)}
             {this.context.token && <div className="sessionMod">
                 <p>Add a Waterloop Work Session!</p>
                 <button className="buttonformat" onClick={this.startNew}>Create Session</button>
             </div>}
             {this.state.load ? (
                 <div className="infinity-loader">
-              <div className="bg">
-                <div className="left-bg"></div>
-                <div className="right-bg"></div>
-              </div>
-              <div className="fg">
-                <div className="top-left-rect">
-                  <div></div>
+                  <div className="bg">
+                    <div className="left-bg"></div>
+                    <div className="right-bg"></div>
+                  </div>
+                  <div className="fg">
+                    <div className="top-left-rect">
+                      <div></div>
+                    </div>
+                    <div className="bottom-right-rect">
+                      <div></div>
+                    </div>
+                    <div className="top-right-rect">
+                      <div></div>
+                    </div>
+                    <div className="bottom-left-rect">
+                      <div></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="bottom-right-rect">
-                  <div></div>
-                </div>
-                <div className="top-right-rect">
-                  <div></div>
-                </div>
-                <div className="bottom-left-rect">
-                  <div></div>
-                </div>
-              </div>
-            </div>
             ) : (
             <ListSessions 
                 sessions={this.state.sessions} 
                 authUserId={this.context.checkUser} 
+                onOpenDescrip={this.detailWindow}
             />)}
             </React.Fragment>
         );
