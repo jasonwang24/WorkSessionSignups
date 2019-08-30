@@ -14,7 +14,7 @@ module.exports= buildSchema(`
           _id: ID!
           title: String!
           description: String!
-          price: Float!
+          urgency: Float!
           date: String!
           creator:User!
         }
@@ -34,12 +34,12 @@ module.exports= buildSchema(`
         input SessionInput {
           title: String!
           description: String!
-          price: Float!
+          urgency: Float!
           date: String!
         }
 
         type Check {
-            userCheck: ID!
+            checkUser: ID!
             token: String!
             tokenExpire: Int!
         }

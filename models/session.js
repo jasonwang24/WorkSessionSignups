@@ -13,7 +13,7 @@ const sessionSchema = new Schema({
         required:true
     },
 
-    price: {
+    urgency: {
         type: Number,
         required:true
     },

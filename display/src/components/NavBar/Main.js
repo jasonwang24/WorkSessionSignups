@@ -17,7 +17,7 @@ const MainNav = props => (
                     </div>
                     <nav className="nav-item">
                         <ul>
-                            <li><NavLink to="/sessions">Sessions</NavLink></li>
+                            {context.token &&(<li><NavLink to="/sessions">Sessions</NavLink></li>)}
                             {context.token &&(<li><NavLink to="/signups">Signups</NavLink></li>)}
                             {!context.token && (<li className="login-format"><NavLink to="/login">Login</NavLink></li>)}
                             {context.token&&(<li className="login-format"><button onClick={context.logout}>Logout</button></li>)}

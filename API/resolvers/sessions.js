@@ -22,31 +22,29 @@ module.exports={
         const session=new Session({
            title: args.sessionInput.title,
            description: args.sessionInput.description,
-           price: +args.sessionInput.price,
+           urgency: +args.sessionInput.urgency,
            date: new Date(args.sessionInput.date),
            creator: req.userId
         });
         let createdSession;
-        return session
-          .save()
-          .then(result=>{
-            createdSession= Modify(result)
-            return User.findById(req.userId)
-        })
-        .then(user=> {
-            if(!user){
-                throw new Error('User not found.')
-            }
-            user.createdSessions.push(session);
-            return user.save();
-        })
-        .then(result=>{
+
+        try{
+            const result=await session.save();
+            createdSession=Modify(result);
+            const creator=await User.findById(req.userId);
+
+            if(!creator){
+                throw new Error('User not found.');
+            }      
+            creator.createdSessions.push(session);
+            await creator.save();
+
             return createdSession;
-        })
-          .catch(err=>{
+        } catch(err){
             console.log(err);
             throw err;
-        });      
-      },
+        } 
+ 
+      }
    
     };

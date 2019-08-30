@@ -41,7 +41,7 @@ class Login extends Component {
             query: `
                 query {
                     login(email:"${address}",password:"${pass}") {
-                        userCheck
+                        checkUser
                         token
                         tokenExpire
                     }   
@@ -50,7 +50,7 @@ class Login extends Component {
         };
 
         if(!this.state.logging){
-            const request = {
+            request = {
                 query: `
                   mutation {
                     createUser(userInput: {email: "${address}", password: "${pass}"}) {
@@ -83,12 +83,32 @@ class Login extends Component {
         })
         .catch(err=>{
             console.log(err);
-        });;
+        });
     };
 
     render() {
         return (<form onSubmit={this.readFields}>
             <h1 className="title">Login Page</h1>
+            <div className="infinity-loader">
+              <div className="bg">
+                <div className="left-bg"></div>
+                <div className="right-bg"></div>
+              </div>
+              <div className="fg">
+                <div className="top-left-rect">
+                  <div></div>
+                </div>
+                <div className="bottom-right-rect">
+                  <div></div>
+                </div>
+                <div className="top-right-rect">
+                  <div></div>
+                </div>
+                <div className="bottom-left-rect">
+                  <div></div>
+                </div>
+              </div>
+            </div>
             <div className="all-forms">
                 <div className="form">
                     <label htmlFor="email">Email: </label>

@@ -1,7 +1,7 @@
 const webtoken=require('jsonwebtoken');
 
 module.exports=(req,res,next) => {
-    const checkHeader = req.get('Checking');
+    const checkHeader = req.get('Authorization');
     if(!checkHeader){
         req.checked = false;
         return next();
@@ -26,6 +26,6 @@ module.exports=(req,res,next) => {
         return next();
     }
     req.checked=true;
-    req.userId=newToken.userCheck;
+    req.userId=newToken.userId;
     next(); 
 }

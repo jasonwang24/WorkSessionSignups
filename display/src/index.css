@@ -24,7 +24,8 @@ body {
 }
 
 .form label,
-.form input{
+.form input,
+.form textarea{
 	width:100%;
 	display:block;
 }

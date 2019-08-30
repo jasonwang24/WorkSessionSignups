@@ -29,7 +29,10 @@ class App extends Component{
 
     login=(token,checkUser,tokenExpire)=>{
         this.setState({token:token,checkUser:checkUser});
+        console.log(token);
+        console.log(checkUser);
     };
+
     logout=()=>{
         this.setState({token:null,checkUser:null});
     };
@@ -56,6 +59,7 @@ class App extends Component{
                         <Switch>
                          {this.state.token&&<Redirect from ="/" to="/sessions" exact/>}
                          {this.state.token&&<Redirect from ="/login" to="/sessions" exact/>}
+                         {!this.state.token&&<Redirect from ="/sessions" to="login" exact/>}
                          {!this.state.token&&(<Route path="/login" component={Login} />)}
                          <Route path="/sessions" component={Sessions} />
                          {this.state.token&&(<Route path="/signups" component={Signups} />)}

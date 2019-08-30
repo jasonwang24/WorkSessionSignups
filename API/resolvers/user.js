@@ -40,6 +40,6 @@ module.exports={
                 throw new Error('Wrong password');
             }
             const token = webtoken.sign({ userId:user.id,email:user.email },'somesupersecretkey',{expiresIn:'1h'});
-            return { userCheck: user.id, token:token, tokenExpire: 1};
+            return { checkUser: user.id, token:token, tokenExpire: 1};
       }
     };
