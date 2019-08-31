@@ -9,7 +9,7 @@ module.exports={
            throw new Error('Bad check'); 
         }
         try {
-            const signups=await Signup.find();
+            const signups=await Signup.find({user:req.userId});
             return signups.map(signup=> {
                 return ModSignup(signup);
             });

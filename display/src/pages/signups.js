@@ -1,10 +1,12 @@
 import React,{ Component } from 'react';
 import LoginCont from '../context/login-cont';
+import ListSignup from '../components/SignupDisplay/Signups/ListSignups';
 
 class Signups extends Component {
     state={
         load:false,
-        signups:[]
+        signups:[],
+        empty:false
     };
 
     static contextType=LoginCont;
@@ -55,6 +57,47 @@ class Signups extends Component {
         });
     };
 
+    cancellingSession=signupId=>{
+        this.setState({load:true});
+        const request = {
+        query: `
+          mutation { 
+            cancelSignup(signupId:"${signupId}"){   
+                _id
+                title
+            }
+          }
+        `
+       };
+        
+        fetch('http://localhost:8000/graphql',{
+            method:'POST',
+            body:JSON.stringify(request),
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+ this.context.token
+            }
+        })
+        .then(res=>{
+            if(res.status!== 200 && res.status !== 201){
+                throw new Error('Error!!!');
+            }
+            return res.json();
+        })
+        .then(resData=>{
+           this.setState(prevState=>{
+               const newSignups = prevState.signups.filter(signup=>{
+                    return signup._id !== signupId;
+               });
+               return {signups:newSignups,load:false};
+           });
+        })
+        .catch(err=>{
+            console.log(err);
+            this.setState({load:false});
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -80,10 +123,9 @@ class Signups extends Component {
                       </div>
                     </div>
                 ) : (
-                    <ul>
-                       {this.state.signups.map(signup=> <li key={signup._id}>{signup.session.title} - { new Date(signup.createdAt).toLocaleDateString()}</li>)}
-                    </ul>
+                    <ListSignup signups={this.state.signups} whenCancel={this.cancellingSession} testing={this.state.signups.length}/>
                 )}
+
                 
             </React.Fragment>
         );
