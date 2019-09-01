@@ -1,5 +1,7 @@
 const Session = require('../../models/session');
 const User = require('../../models/user');
+const DataLoader=require('dataloader');
+
 
 const Modify = session => {
     return{...session._doc,_id:session.id,date:new Date(session._doc.date).toISOString(),creator:user.bind(this,session.creator)};
@@ -16,19 +18,27 @@ const sessions=async sessionIds=>{
     }
 };
 
+const sessionLoader=new DataLoader((sessionIds)=>{
+    return sessions(sessionIds);
+});
+
+const userLoader=new DataLoader(userIds=>{
+    return User.find({_id:{$in:userIds}});
+});
+
 const oneSession = async sessionId => {
     try {
-        const session = await Session.findById(sessionId);
-        return Modify(session);
+        const session = await sessionLoader.load(sessionId.toString());
+        return session;
     } catch (err){
         throw err;
     }
 };
 
 const user = userId => {
-    return User.findById(userId)
+    return userLoader.load(userId.toString())
         .then(user=>{
-            return{...user._doc,createdSessions:sessions.bind(this,user._doc.createdSessions)};
+            return{...user._doc,createdSessions:sessionLoader.load.bind(this,user._doc.createdSessions)};
         })
         .catch(err=>{throw err;
         });
