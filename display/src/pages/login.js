@@ -42,6 +42,7 @@ class Login extends Component {
             return;
         }
 
+        //set API  query request to check authentication
         let request={
             query: `
                 query {
@@ -54,6 +55,7 @@ class Login extends Component {
             `
         };
 
+        //if the user is not logging in, set API mutation request to create a new user
         if(!this.state.logging){
             request = {
                 query: `
@@ -67,6 +69,7 @@ class Login extends Component {
               };
         }
         
+        //send fetch request and convert response to JSON
         fetch('http://localhost:8000/graphql',{
             method:'POST',
             body:JSON.stringify(request),
@@ -74,12 +77,14 @@ class Login extends Component {
                 'Content-Type':'application/json'
             }
         })
+        //error-checking the http response status code
         .then(res=>{
             if(res.status!==200&&res.status!==201){
                 throw new Error('Error');
             }
             return res.json();
         })
+        //pass data to login context
         .then(resData=>{
             if(resData.data.login.token){
                 this.context.login(resData.data.login.token,resData.data.login.checkUser,resData.data.login.tokenExpire);

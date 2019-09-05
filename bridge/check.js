@@ -15,7 +15,7 @@ module.exports=(req,res,next) => {
     let newToken;
     try
     {
-        newToken = webtoken.verify(token,'somesupersecretkey');
+        newToken = webtoken.verify(token,'somekey');
     }
     catch(err){
         req.checked=false;

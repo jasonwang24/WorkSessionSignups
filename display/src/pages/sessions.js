@@ -97,7 +97,6 @@ class Sessions extends Component {
         });
     };
 
-
     getData(){
         this.setState({load:true});
         const request = {
@@ -164,7 +163,7 @@ class Sessions extends Component {
             body:JSON.stringify(request),
             headers:{
                 'Content-Type':'application/json',  
-                'Authorization': 'Bearer '+this.context.token
+                'Authorization': 'Bearer ' + this.context.token
             }
         })
         .then(res=>{
@@ -190,6 +189,7 @@ class Sessions extends Component {
         })
     };
 
+    //modify the format of the date output
     formatDate=(date)=>{
          var monthNames = [
              "January", "February", "March",
@@ -207,7 +207,6 @@ class Sessions extends Component {
 
     render() {
         return (
-
             <React.Fragment>
             {(this.state.new || this.state.sessionSelect) && <Fade/>} 
             {this.state.new && <Window title="Adding a Session..." cancel confirm cancelling={this.checkCancel} confirming={this.checkConfirm} confirmButton="Confirm">
@@ -235,7 +234,7 @@ class Sessions extends Component {
                 <p>{this.state.sessionSelect.description}</p>
                 
             </Window>)}
-            {this.context.token && <div className="sessionMod">
+            {<div className="sessionMod">
                 <p>Add a Waterloop Work Session!</p>
                 <button className="buttonformat" onClick={this.startNew}>Create Session</button>
             </div>}
