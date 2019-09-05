@@ -10,6 +10,9 @@ const Modify = session => {
 const sessions=async sessionIds=>{
     try{
         const sessions = await Session.find({_id:{$in: sessionIds}});
+        sessions.sort((a,b)=>{
+            return (sessionIds.indexOf(a._id.toString()) - sessionIds.indexOf(b._id.toString()));
+        });
         return sessions.map(session=>{
             return Modify(session);
     });
@@ -38,7 +41,7 @@ const oneSession = async sessionId => {
 const user = userId => {
     return userLoader.load(userId.toString())
         .then(user=>{
-            return{...user._doc,createdSessions:sessionLoader.load.bind(this,user._doc.createdSessions)};
+            return{...user._doc,createdSessions:()=>sessionLoader.loadMany(user._doc.createdSessions)};
         })
         .catch(err=>{throw err;
         });

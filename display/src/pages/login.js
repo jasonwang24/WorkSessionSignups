@@ -4,22 +4,26 @@ import LoginCont from'../context/login-cont';
 
 class Login extends Component {
 
+    //determine state of logging for loading bar
     state={
         logging:true
     };
 
+    //swap function to change state of logging
     swap=()=>{
         this.setState(prevState=>{
             return{logging:!prevState.logging};
         });
     };
 
+    //create properties of email and password
     constructor(props){
         super(props);
         this.email=React.createRef();
         this.password=React.createRef();
     };
 
+    //set context for login/logout processes
     static contextType=LoginCont;
 
     //regex to validate characters in address
@@ -28,6 +32,7 @@ class Login extends Component {
            return re.test(address);
     };
 
+    //function to gather data  
     readFields=(event)=>{
         event.preventDefault();
         const address=this.email.current.value;
@@ -61,7 +66,6 @@ class Login extends Component {
                 `
               };
         }
-
         
         fetch('http://localhost:8000/graphql',{
             method:'POST',

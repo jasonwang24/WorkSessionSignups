@@ -97,6 +97,7 @@ class Sessions extends Component {
         });
     };
 
+
     getData(){
         this.setState({load:true});
         const request = {
@@ -187,10 +188,26 @@ class Sessions extends Component {
             const sessionSelect=prevState.sessions.find(s=>s._id===sessionId)
             return{sessionSelect:sessionSelect};
         })
-    }
+    };
+
+    formatDate=(date)=>{
+         var monthNames = [
+             "January", "February", "March",
+             "April", "May", "June", "July",
+             "August", "September", "October",
+             "November", "December"
+         ];
+
+         var day = date.getDate();
+         var monthIndex = date.getMonth();
+         var year = date.getFullYear();
+
+         return monthNames[monthIndex] + ' ' + day  + ' ' + year;
+    };         
 
     render() {
         return (
+
             <React.Fragment>
             {(this.state.new || this.state.sessionSelect) && <Fade/>} 
             {this.state.new && <Window title="Adding a Session..." cancel confirm cancelling={this.checkCancel} confirming={this.checkConfirm} confirmButton="Confirm">
@@ -214,8 +231,7 @@ class Sessions extends Component {
                 </form>
             </Window>}
             {this.state.sessionSelect  && (<Window title={this.state.sessionSelect.title} cancel confirm cancelling={this.checkCancel} confirming={this.sessionSignup} confirmButton="Signup">
-                <h1>{this.state.sessionSelect.title}</h1>
-                <h2>test</h2>
+                <h2>Urgency Rating: {this.state.sessionSelect.urgency} &nbsp;&nbsp;&nbsp;&nbsp; |  &nbsp;&nbsp;&nbsp;&nbsp; When: {this.formatDate(new Date(this.state.sessionSelect.date))}</h2>
                 <p>{this.state.sessionSelect.description}</p>
                 
             </Window>)}
