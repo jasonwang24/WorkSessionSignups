@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const graphqlHttp = require('express-graphql');
+const graphqlHttp = require('express-graphql'); //function for middleware that takes incoming requests and send through graphql query parser
 const mongoose=require('mongoose');
 
 const APISchema=require('./API/schema/index');
