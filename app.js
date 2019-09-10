@@ -24,8 +24,7 @@ app.use((req,res,next)=>{
 app.use(checkTrue);
 
 app.use(
-  '/graphql',
-  graphqlHttp({
+  '/graphql', graphqlHttp({
     schema: APISchema,
     rootValue: APIResolvers,
     graphiql: true

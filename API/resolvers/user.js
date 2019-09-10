@@ -6,15 +6,15 @@ const webtoken = require('jsonwebtoken');
 module.exports={
 
       createUser:args=> {
-
-            return User.findOne({email:args.userInput.email}).then(user=>{
-
+            return User.findOne({email:args.userInput.email}).then(
+            
+            user=>{
             if(user) {
                 throw new Error('User exists already.');
             }                      
 
-            return bcrypt
-            .hash(args.userInput.password,12)
+            //hashing function to protect password security
+            return bcrypt.hash(args.userInput.password,12)
             })
             .then(hashedPassword=>{
                const user = new User({
@@ -39,7 +39,7 @@ module.exports={
             if (!isTrue){
                 throw new Error('Wrong password');
             }
-            const token = webtoken.sign({ userId:user.id,email:user.email },'somesupersecretkey',{expiresIn:'1h'});
+            const token = webtoken.sign({ userId:user.id,email:user.email },'somekey',{expiresIn:'1h'});
             return { checkUser: user.id, token:token, tokenExpire: 1};
       }
     };
